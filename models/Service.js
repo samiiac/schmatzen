@@ -21,6 +21,7 @@ const serviceSchema = new mongoose.Schema({
   availability: {
     type: Boolean,
     required: true,
+    default: true,
   },
   images: {
     type: [String],
@@ -32,6 +33,7 @@ const serviceSchema = new mongoose.Schema({
   },
 });
 
-const serviceModel = mongoose.models.services || mongoose.model("service", serviceSchema);
+const serviceModel =
+  mongoose.models.services || mongoose.model("service", serviceSchema);
 
 export default serviceModel;

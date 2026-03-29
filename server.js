@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-import servicesRoutes from "./routes/servicesRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import "dotenv/config";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
@@ -16,10 +17,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//server health
 app.get("/health", (req, res) => {
   res.send("heeloiiiuu");
 });
 
-app.use("/api/services", servicesRoutes);
+//api endpoints
+app.use("/api/services", serviceRoutes);
+app.use("/api/auth",authRoutes);
 
 export default app;
