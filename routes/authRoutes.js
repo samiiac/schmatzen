@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { registerUser } from "../controllers/userController.js";
+import { loginUser, logout, registerUser } from "../controllers/userController.js";
 import { validateUserRegister } from "../middleware/validation.js";
 const router = Router();
 
@@ -16,8 +16,8 @@ const userRegisterSchema = z.object({
 
 router.post("/signup", validateUserRegister(userRegisterSchema), registerUser);
 
-router.post("/login", (req, res) => {});
+router.post("/login", loginUser);
 
-router.post("/logout", (req, res) => {});
+router.post("/logout", logout);
 
 export default router;

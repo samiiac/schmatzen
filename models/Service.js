@@ -33,7 +33,15 @@ const serviceSchema = new mongoose.Schema({
   },
 });
 
-const serviceModel =
-  mongoose.models.services || mongoose.model("service", serviceSchema);
+serviceModel.pre('save',function(next){
+  if(this.serviceType == 'Basic'){
+    this.deliveryType = 'Digital';
+  }else{
+    this.deliveryType = 'Digital and Physical';
+  }
+  next();
+})
+
+const serviceModel = mongoose.models.services || mongoose.model("service", serviceSchema);
 
 export default serviceModel;
