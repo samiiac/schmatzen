@@ -19,23 +19,19 @@ const authenticate = (req, res, next) => {
 
 const authorize = function (requiredRole) {
   return (req, res, next) => {
+    console.log(req.user);
     try {
-      
-  
-      if (req.user.role != requiredRole) {
+      if (req.user.role !== requiredRole) {
         return res
           .status(403)
           .json({ success: false, message: "Not enough permissions." });
       }
-  
       next();
     } catch (error) {
       console.log(error);
-      return res
-        .status(403)
-        .json({ success: false, message: "Not enough permissions." });
+      return res.status(500).json({ success: false, message: error.message });
     }
   };
 };
 
-export { authenticate , authorize};
+export { authenticate, authorize };

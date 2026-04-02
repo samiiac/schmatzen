@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { loginUser, logout, registerUser } from "../controllers/userController.js";
+import { loginUser, logout, registerAdmin, registerUser } from "../controllers/userController.js";
 import { validateUserRegister } from "../middleware/validation.js";
 const router = Router();
 
@@ -19,5 +19,7 @@ router.post("/signup", validateUserRegister(userRegisterSchema), registerUser);
 router.post("/login", loginUser);
 
 router.post("/logout", logout);
+
+router.post("/admin/register",registerAdmin);
 
 export default router;

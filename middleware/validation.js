@@ -19,6 +19,25 @@ export const validateServiceBody = function (serviceSchema) {
   };
 };
 
+export const validateUpdatedServiceBody = function (schema) {
+  return (req, res, next) => {
+    try {
+      const validatedData = schema.parse(req.body);
+      req.body = validatedData;
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation Failed",
+          details: error.message,
+        });
+      }
+      next(error);
+    }
+  };
+};
+
 export const validateUserRegister = function (userSchema) {
   return (req, res, next) => {
     try {
