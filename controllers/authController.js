@@ -1,11 +1,6 @@
 import userModel from "../models/User.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-
-const createToken = (id, email, role) => {
-  const payload = { id: id, email: email, role: role };
-  return jwt.sign(payload, process.env.JWT_SECRET_KEY);
-};
+import { createToken } from "../utils/createToken.js";
 
 const registerUser = async (req, res) => {
   const { email, firstname, lastname, phonenumber, password } = req.body;
@@ -41,18 +36,6 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (
-      email == process.env.ADMIN_EMAIL &&
-      password == process.env.ADMIN_PASS
-    ) {
-      const payload = {
-        email: email,
-        password: password,
-        role: "Admin",
-      };
-      const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-      return res.status(200).json({ success: true, token });
-    }
 
     const user = await userModel.findOne({ email });
 
@@ -110,6 +93,21 @@ const registerAdmin = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userModel.findById(userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ success: false,message:"No object found." });
+    }
+   
+    res.status(200).json({ success: true, user});
+  } catch (error) {
+    console.log("Error getting user profile", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 const logout = async (req, res) => {};
 
-export { registerUser, loginUser, logout, registerAdmin };
+export { registerUser, loginUser, logout, registerAdmin, getUserProfile };

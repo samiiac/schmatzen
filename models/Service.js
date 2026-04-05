@@ -1,38 +1,30 @@
 import mongoose from "mongoose";
 
-const serviceSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const serviceSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    pricing: {
+      basic: {type : Number,required:true},
+      premium: {type: Number,required:true}
+    },
+    details: {
+      type: String,
+      required: true,
+    },
+    availability: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+    images: {
+      type: [String],
+    },
   },
-  price: {
-    type: Number,
-    required: true,
-  },
-  details: {
-    type: String,
-    required: true,
-  },
-  serviceType: {
-    type: String,
-    enum: ["Basic", "Premium"],
-    required: true,
-  },
-  availability: {
-    type: Boolean,
-    required: true,
-    default: true,
-  },
-  images: {
-    type: [String],
-  },
-  deliveryType: {
-    type: String,
-    enum: ["Digital", "Digital and Physical"],
-    required: true,
-  },
-
-},{timestamps:true});
+  { timestamps: true },
+);
 
 // serviceSchema.pre('save',function(next){ didnt workk
 //   if(this.serviceType == 'Basic'){

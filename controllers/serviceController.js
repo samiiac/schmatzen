@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 const createService = async (req, res) => {
   //admin
   try {
-    const { name, price, details, serviceType, availability } = req.body;
+    const { name, pricing, details, availability } = req.body;
 
     const image1 = req.files.image1 && req.files.image1[0];
     const image2 = req.files.image2 && req.files.image2[0];
@@ -22,19 +22,23 @@ const createService = async (req, res) => {
     console.log(imagesURL);
     const newService = new serviceModel({
       name,
-      price: Number(price),
+      pricing:{
+        basic:pricing.basic,
+        premium:pricing.premium
+      },
       details,
-      serviceType,
       availability,
       images: imagesURL,
-      deliveryType: serviceType == "Basic" ? "Digital" : "Digital and Physical",
     });
     console.log(newService);
 
     await newService.save();
+    if(!newService){
+      return res.status(400).json({ success: false, message: "Error creating service." });
+    }
     res
       .status(201)
-      .json({ success: true, message: "Service Added Successfully" });
+      .json({ success: true, message: "Service Added Successfully",service : newService });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error });
@@ -76,13 +80,6 @@ const updateService = async (req, res) => {
     const id = req.params.id;
     const updatedData = req.body;
 
-    if (updatedData.serviceType) {
-      updatedData.deliveryType =
-        updatedData.serviceType === "Basic"
-          ? "Digital"
-          : "Digital and Physical";
-    }
-
     const updatedService = await serviceModel.findByIdAndUpdate(
       id,
       { $set: updatedData },
@@ -99,16 +96,14 @@ const updateService = async (req, res) => {
 
 //delete a specific service
 const deleteService = async (req, res) => {
-  //admin
   console.log(req.params);
   try {
     const id = req.params.id;
-    if (!mongoose.isValidObjectId(id)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid object id." });
+
+    const deleted = await serviceModel.findByIdAndDelete(req.params.id); //params or body?
+    if (!deleted) {
+      return res.status(404).json({ message: "Service not found" });
     }
-    await serviceModel.findByIdAndDelete(req.params.id); //params or body?
     res.status(200).json({ success: true, message: "Successfully deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
