@@ -1,5 +1,12 @@
-import { useState, useContext } from "react";
+import {  useContext } from "react";
 import { UserAuthContext } from "./AuthProvider";
+import Home from "./pages/Home";
+import SingleService from "./pages/SingleService";
+import RootLayout from "./pages/RootLayout";
+import AuthLayout from "./pages/AuthLayout";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Services from "./pages/Services";
 
 import {
   createBrowserRouter,
@@ -11,11 +18,12 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
-const ProtectedRoutes = () => {
-  const { token } = useContext(UserAuthContext);
 
-  if (!token) {
-    return <Navigate to="/login" />;
+const ProtectedRoutes = () => {
+  const { user } = useContext(UserAuthContext);
+
+  if (!user) {
+    return <Navigate to="/auth/login" />;
   }
 
   return <Outlet />;
@@ -27,11 +35,12 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        index:true,element:<Home/>
+        index: true,
+        element: <Home />,
       },
       {
         path: "/services",
-        element: <ServicesPage />,
+        element: <Services />,
       },
       {
         path: "/services/:id",
@@ -39,8 +48,14 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: "/signup", element: <Signup /> },
-  { path: "/login", element: <Login /> },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { path: "signup", element: <SignUp /> },
+      { path: "login", element: <Login /> },
+    ],
+  },
 ]);
 function App() {
   return <RouterProvider router={router}></RouterProvider>;

@@ -4,6 +4,7 @@ import { createContext,useMemo,useState } from "react";
 export const UserAuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  
   const [user,setUser] = useState(JSON.parse(localStorage.getItem('user'))|| '');
   
   
