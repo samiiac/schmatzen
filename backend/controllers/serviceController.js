@@ -48,8 +48,14 @@ const createService = async (req, res) => {
 //retrieve all services
 const getAllServices = async (req, res) => {
   try {
-    const services = await serviceModel.find({});
-    res.status(200).json({ success: true, services: services });
+    const services = await serviceModel.find({},{
+    
+      name:1,
+      pricing:1,
+      availability:1,
+      images:{$slice:1}
+    });
+    res.status(200).json({ success: true, services:services});
   } catch (error) {
     console.log("Error while fetching services", error);
     res.status(500).json({ message: error.message });

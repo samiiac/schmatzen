@@ -15,9 +15,14 @@ const app = express();
 connectDB();
 connectCloudinary();
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", (req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
+app.use("/uploads", express.static("uploads"));
 
 //server health
 app.get("/health", (req, res) => {
@@ -26,7 +31,7 @@ app.get("/health", (req, res) => {
 
 //api endpoints
 app.use("/api/services", serviceRoutes);
-app.use("/api/auth",authRoutes);
-app.use("/api/reservations",authenticate,reservationRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/reservations", authenticate, reservationRoutes);
 
 export default app;

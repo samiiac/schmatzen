@@ -10,7 +10,7 @@ const registerUser = async (req, res) => {
 
     if (emailExists) {
       return res
-        .status(400)
+        .status(409)
         .json({ success: false, message: "Account already exists." });
     }
 
@@ -26,7 +26,15 @@ const registerUser = async (req, res) => {
     const user = await newUser.save();
     const token = createToken(user._id, user.email, user.role);
 
-    res.status(201).json({ success: true, token: token });
+    res
+      .status(201)
+      .json({
+        success: true,
+        token: token,
+        role: user.role,
+        email: user.email,
+        firstname: user.firstname,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
@@ -42,18 +50,26 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid user or password." });
+        .json({ success: false, message: "Invalid credentials." });
     }
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid user or password." });
+        .json({ success: false, message: "Invalid credentials." });
     }
 
     const token = createToken(user._id, user.email, user.role);
-    res.status(200).json({ success: true, token: token });
+    res
+      .status(200)
+      .json({
+        success: true,
+        token: token,
+        role: user.role,
+        email: user.email,
+        firstname: user.firstname,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
@@ -96,12 +112,14 @@ const registerAdmin = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await userModel.findById(userId).select('-password');
+    const user = await userModel.findById(userId).select("-password");
     if (!user) {
-      return res.status(404).json({ success: false,message:"No object found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "No object found." });
     }
-   
-    res.status(200).json({ success: true, user});
+
+    res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error getting user profile", error);
     res.status(500).json({ success: false, message: error.message });
