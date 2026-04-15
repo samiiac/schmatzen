@@ -6,6 +6,7 @@ import RootLayout from "./pages/RootLayout";
 import AuthLayout from "./pages/AuthLayout";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Reservations from "./pages/Reservations";
 import Services from "./pages/Services";
 
 import {
@@ -29,6 +30,18 @@ const ProtectedRoutes = () => {
   return <Outlet />;
 };
 
+const AdminRoutes=()=>{
+    const { user } = useContext(UserAuthContext);
+  if(!user){
+    return <Navigate to="/auth/login" />;
+  }
+  if (!user.role == 'admin') {
+    return <Navigate to="/" />;
+  }
+
+  return <Outlet />;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -45,7 +58,26 @@ const router = createBrowserRouter([
       {
         path: "/services/:id",
         element: <SingleService />,
+      },{
+        element:<ProtectedRoutes/>,
+        children:[
+          {
+            path:"/reservations",
+            element:<Reservations />
+          },
+          //or here??
+        ]
       },
+      // {
+      //   element:<AdminRoutes/>,
+      //   children:[
+      //     {
+      //       path:"/services/add",
+      //       element:<Reservations />
+      //     }
+      //   ]
+      // }
+
     ],
   },
   {
