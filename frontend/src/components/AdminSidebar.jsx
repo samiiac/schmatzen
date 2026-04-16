@@ -27,7 +27,7 @@ function AdminSidebar({ toggleSidebar }) {
             </h3>
             <ul className="flex flex-col gap-1 text-base">
               <li>
-                <Link to="/admin/services" className="hover:text-accent">
+                <Link to="/services" className="hover:text-accent">
                   View all services
                 </Link>
               </li>

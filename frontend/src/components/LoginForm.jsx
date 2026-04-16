@@ -52,7 +52,6 @@ function LoginForm() {
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          {/* Email Field */}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="email"
@@ -72,7 +71,6 @@ function LoginForm() {
             )}
           </div>
 
-          {/* Password Field */}
           <div className="flex flex-col gap-2">
             <label
               htmlFor="password"
@@ -93,14 +91,12 @@ function LoginForm() {
             )}
           </div>
 
-          {/* Global Error */}
           {error && (
             <div className="bg-red-500/10 border border-red-500/50 p-3 text-red-500 text-xs text-center uppercase tracking-widest">
               {error}
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={isSubmitting}

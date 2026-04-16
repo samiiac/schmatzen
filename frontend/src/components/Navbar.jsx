@@ -9,8 +9,8 @@ function Navbar() {
   const { user } = useContext(UserAuthContext);
   const [collapse, setCollapse] = useState(true);
   const isLoggedIn = user ? true : false;
-  const isAdmin = isLoggedIn && user.role == "admin";
-
+  const isAdmin = true;
+// isLoggedIn && user.role == "admin";
   function toggleCollapse() {
     setCollapse((prev) => !prev);
   }
