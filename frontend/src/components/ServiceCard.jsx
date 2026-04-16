@@ -5,7 +5,7 @@ function ServiceCard({service}) {
    <div>
       <div>
         <h3>{service.name}</h3>
-        <img height='100' src={service.images[0]}></img>
+        <img className='h-64 w-64 object-cover' src={service.images[0]}></img>
         <div>
           <span>Basic : {service.pricing.basic}</span>
           <span>Premium:{service.pricing.premium}</span>
