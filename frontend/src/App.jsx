@@ -7,10 +7,9 @@ import AuthLayout from "./pages/AuthLayout";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import UserReservations from "./pages/UserReservations";
-import AllReservations from "./pages/AllReservations";
 import Services from "./pages/Services";
 import AddServiceForm from "./components/AddServiceForm";
-import EditServiceForm from "./components/EditServiceForm";
+
 
 import {
   createBrowserRouter,
@@ -72,17 +71,9 @@ const router = createBrowserRouter([
             element: <AdminRoutes />,
             children: [
               {
-                path: "admin/services/add",
+                path: "admin/services",
                 element: <AddServiceForm />,
               },
-              {
-                path: "admin/services/edit/:id",
-                element: <EditServiceForm />,
-              },
-              {
-                path:"admin/reservations/all",
-                element:<AllReservations/>
-              }
             ],
           },
         ],

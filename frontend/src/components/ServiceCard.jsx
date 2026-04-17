@@ -11,6 +11,8 @@ function ServiceCard({service}) {
           <span>Premium:{service.pricing.premium}</span>
         </div>
         <p>{service.availability?'Available':'Unavailable'}</p>
+        
+        <Link to={`/admin/service/?id=${service._id}`}>Edit service</Link>
         <button>Book Now</button>
     </div>
     </div>

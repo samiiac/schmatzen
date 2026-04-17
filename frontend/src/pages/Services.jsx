@@ -9,7 +9,7 @@ function Services() {
     queryFn: retrieveAllServices,
   });
 
-  console.log(data);
+ 
 
   return (
     <div>

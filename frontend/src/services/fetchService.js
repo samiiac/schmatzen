@@ -25,6 +25,8 @@ try{
  }
 }
 
+ 
+
 export async function addService(formData){
  try{
   const {data} = await api.post('/api/services',formData);
@@ -38,5 +40,9 @@ export async function addService(formData){
   console.log("Error while adding service in database",JSON.parse(error.response.data.details)[0]);
   return { serviceAdded:false , error : error.response.data.message}
  }
+}
+
+export async function editService(formData){
+ 
 }
 

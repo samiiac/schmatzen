@@ -1,40 +1,41 @@
 import React, { useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { addService } from "../services/fetchService";
-import { useNavigate } from "react-router-dom";
+import { addService, editService } from "../services/fetchService";
+import { useNavigate, useParams } from "react-router-dom";
+import { serviceSchema } from "../schemas/serviceSchema";
+import { useQuery } from "@tanstack/react-query";
+import { retrieveServiceDetails } from "../services/fetchService";
 
-const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-const serviceSchema = z.object({
-  name: z.string().min(5, "Name cannot be empty.").trim(),
-  basic: z.coerce.number().positive("Price must be positive"),
-  premium: z.coerce.number().positive("Price must be positive"),
-  details: z.string(),
-  availability: z.coerce.boolean(),
-  image1: z
-    .any()
-    .refine((files) => files?.length > 0, "Image is required.")
-    .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      "Exceeds the maximum limit",
-    )
-    .refine(
-      (files) => allowedTypes.includes(files?.[0]?.type),
-      "The file type isnt allowed.",
-    ),
-});
-
-function AddServiceForm() {
+function AddServiceForm({ edit = false }) {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ mode: "onChange", resolver: zodResolver(serviceSchema) });
+
+
+  const {
+    data: service,
+    isLoading,
+  } = useQuery({
+    queryKey: ["service", id],
+    queryFn: () => retrieveServiceDetails(id),
+    enabled: edit && id != null,
+    onSuccess: (data) => {
+      reset({
+        name: data.service.name,
+        basic: data.service.pricing.basic,
+        premium: data.service.pricing.premium,
+        details: data.service.details,
+        availability: data.service.availability.toString(),
+      });
+    },
+  });
 
   async function handleServiceFormSubmit(data) {
     setError(null);
@@ -50,10 +51,10 @@ function AddServiceForm() {
 
       console.log([...formData.entries()]);
 
-      const response = await addService(formData);
+      const response = edit ? await editService : await addService(formData);
 
       console.log(response);
-      if (response.serviceAdded) {
+      if (response.serviceAdded || response.serviceUpdated) {
         navigate("/services");
       } else {
         console.log(response.error);
@@ -62,6 +63,10 @@ function AddServiceForm() {
     } catch (error) {
       console.log("Error while adding service", error);
     }
+  }
+
+  if (edit && isLoading) {
+    return <p>..loading</p>;
   }
 
   return (
@@ -123,8 +128,9 @@ function AddServiceForm() {
           {errors.image1 && <p>{errors.image1.message}</p>}
         </div>
         {error && <p>{error}</p>}
+
         <button type="submit" disabled={isSubmitting}>
-          Add
+          {edit ? "Edit Service" : "Add Service"}
         </button>
       </form>
     </div>
