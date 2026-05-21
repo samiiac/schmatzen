@@ -6,19 +6,19 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-brand">
-          <h3>Schatzen</h3>
-          <p>Professional photography services for your special moments.</p>
+          <div className="footer-logo">Schatzen</div>
+          <p>Professional photography services for your most important moments. Capturing memories that last forever.</p>
         </div>
-        <div className="footer-links">
+        <div className="footer-col">
           <h4>Quick Links</h4>
           <Link to="/">Home</Link>
           <Link to="/services">Services</Link>
           <Link to="/contact">Contact</Link>
         </div>
-        <div className="footer-contact">
-          <h4>Contact</h4>
-          <p>Email: hello@schatzen.com</p>
-            <p>Contact us at your convenience</p>
+        <div className="footer-col">
+          <h4>Get in Touch</h4>
+          <p>hello@schatzen.com</p>
+          <p>+977 (000) 000-0000</p>
         </div>
       </div>
       <div className="footer-bottom">
@@ -27,4 +27,5 @@ function Footer() {
     </footer>
   );
 }
+
 export default Footer;

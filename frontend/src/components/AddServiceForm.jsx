@@ -28,11 +28,11 @@ function AddServiceForm({ edit = false }) {
     enabled: edit && id != null,
     onSuccess: (data) => {
       reset({
-        name: data.service.name,
-        basic: data.service.pricing.basic,
-        premium: data.service.pricing.premium,
-        details: data.service.details,
-        availability: data.service.availability.toString(),
+        name: data.name,
+        basic: data.pricing.basic,
+        premium: data.pricing.premium,
+        details: data.details,
+        availability: data.availability.toString(),
       });
     },
   });
@@ -51,7 +51,7 @@ function AddServiceForm({ edit = false }) {
 
       console.log([...formData.entries()]);
 
-      const response = edit ? await editService : await addService(formData);
+      const response = edit ? await editService(id, formData) : await addService(formData);
 
       console.log(response);
       if (response.serviceAdded || response.serviceUpdated) {

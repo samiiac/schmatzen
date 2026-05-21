@@ -1,61 +1,55 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuthContext } from "../AuthProvider";
-import AdminSidebar from "./AdminSidebar";
-
 import { CiMenuBurger } from "react-icons/ci";
 
 function Navbar() {
-  const { user } = useContext(UserAuthContext);
-  const [collapse, setCollapse] = useState(true);
-  const isLoggedIn = user ? true : false;
-  const isAdmin = true;
-// isLoggedIn && user.role == "admin";
-  function toggleCollapse() {
-    setCollapse((prev) => !prev);
-  }
+  const { user, logout } = useContext(UserAuthContext);
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLogout = () => { logout(); navigate("/"); setMobileOpen(false); };
+  const isAdmin = user?.role === "admin";
+
   return (
     <>
-      <nav className="py-2 px-12 text-text flex justify-between items-center border-b h-[70px]">
-        <Link to="/" className="studio-name text-xl text-accent">
-          Schatzen
-        </Link>
+      <nav className="navbar">
+        <div className="navbar-container">
+          <Link to="/" className="navbar-brand" onClick={() => setMobileOpen(false)}>Schatzen</Link>
 
-        <div className="nav-r flex gap-12 font-light text-base tracking-[0.1em]">
-          {!isAdmin && (
-            <Link to="/services" className="hover:border-b border-muted">
-              Services
-            </Link>
-          )}
-          {isAdmin ? (
-            <button onClick={toggleCollapse}>
-              <CiMenuBurger />
-            </button>
-          ) : isLoggedIn ? (
-            <>
-              <Link to="/services" className="hover:border-b border-muted">
-                Reservations
-              </Link>
-              <Link to="">{user.email}</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/auth/login" className="hover:border-b border-muted">
-                Contact
-              </Link>
-              <Link
-                to="/auth/login"
-                className="border border-accent/30 px-5 py-2 text-xs uppercase tracking-[0.2em] transition-all hover:bg-accent hover:text-black"
-              >
-                Book now
-              </Link>
-            </>
-          )}
+          <button className="nav-toggle" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+            <CiMenuBurger />
+          </button>
+
+          <div className={`navbar-links ${mobileOpen ? "open" : ""}`}>
+            <Link to="/" onClick={() => setMobileOpen(false)}>Home</Link>
+            <Link to="/services" onClick={() => setMobileOpen(false)}>Services</Link>
+            <Link to="/contact" onClick={() => setMobileOpen(false)}>Contact</Link>
+
+            {!user ? (
+              <>
+                <Link to="/auth/login" onClick={() => setMobileOpen(false)}>Login</Link>
+                <Link to="/auth/signup" className="btn-primary" onClick={() => setMobileOpen(false)}
+                  style={{padding:'6px 18px',borderRadius:'999px',fontSize:'.82rem',fontWeight:500,textDecoration:'none',
+                    background:'linear-gradient(135deg,#e879f9,#f472b6)',color:'#fff',
+                    boxShadow:'0 0 20px rgba(232,121,249,.3)',display:'inline-flex',alignItems:'center'}}>
+                  Sign Up
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/my-reservations" onClick={() => setMobileOpen(false)}>My Bookings</Link>
+                <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Wishlist</Link>
+                {isAdmin && <Link to="/admin/services" onClick={() => setMobileOpen(false)}>Admin</Link>}
+                <span className="nav-user">{user.firstname}</span>
+                <button onClick={handleLogout} className="btn-outline" style={{padding:'5px 14px',borderRadius:'999px',fontSize:'.78rem',border:'1.5px solid rgba(167,139,250,.3)',background:'transparent',color:'#a78bfa',cursor:'pointer'}}>
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </nav>
-      {isAdmin && !collapse && (
-        <AdminSidebar toggleSidebar={() => setCollapse(true)} />
-      )}
     </>
   );
 }

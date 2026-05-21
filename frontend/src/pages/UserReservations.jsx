@@ -1,9 +1,19 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
 
-function UserReservations() {
+function MyReservations() {
+  const navigate = useNavigate();
+
   return (
-    <div>UserReservations</div>
-  )
+    <div className="page my-reservations-page">
+      <div className="empty-state-card">
+        <h2>My Bookings</h2>
+        <p>You haven't booked any sessions yet.</p>
+        <button onClick={() => navigate("/services")} className="btn btn-primary btn-lg">
+          Explore Services
+        </button>
+      </div>
+    </div>
+  );
 }
 
-export default UserReservations
+export default MyReservations;
