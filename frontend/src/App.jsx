@@ -1,4 +1,4 @@
-import {  useContext } from "react";
+import { useContext } from "react";
 import { UserAuthContext } from "./AuthProvider";
 import Home from "./pages/Home";
 import SingleService from "./pages/SingleService";
@@ -6,7 +6,10 @@ import RootLayout from "./pages/RootLayout";
 import AuthLayout from "./pages/AuthLayout";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import UserReservations from "./pages/UserReservations";
 import Services from "./pages/Services";
+import AddServiceForm from "./components/AddServiceForm";
+
 
 import {
   createBrowserRouter,
@@ -18,12 +21,23 @@ import {
 } from "react-router-dom";
 import "./App.css";
 
-
 const ProtectedRoutes = () => {
   const { user } = useContext(UserAuthContext);
 
   if (!user) {
     return <Navigate to="/auth/login" />;
+  }
+
+  return <Outlet />;
+};
+
+const AdminRoutes = () => {
+  const { user } = useContext(UserAuthContext);
+  if (!user) {
+    return <Navigate to="/auth/login" />;
+  }
+  if (!user.role == "admin") {
+    return <Navigate to="/" />;
   }
 
   return <Outlet />;
@@ -45,6 +59,24 @@ const router = createBrowserRouter([
       {
         path: "/services/:id",
         element: <SingleService />,
+      },
+      {
+        element: <ProtectedRoutes />,
+        children: [
+          {
+            path: "/reservations",
+            element: <UserReservations />,
+          },
+          {
+            element: <AdminRoutes />,
+            children: [
+              {
+                path: "admin/services",
+                element: <AddServiceForm />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
