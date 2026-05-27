@@ -118,7 +118,10 @@ export const getUserReservations = async (req, res) => {
 
 export const getAllReservations = async (req, res) => {
   try {
-    const reservations = await reservationModel.find({});
+    const reservations = await reservationModel
+      .find({})
+      .populate("service", "name")
+      .populate("user", "email");
     res.status(200).json({ success: true, reservations });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

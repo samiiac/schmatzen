@@ -5,6 +5,8 @@ import helmet from "helmet";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 import "dotenv/config";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
@@ -33,5 +35,7 @@ app.get("/health", (req, res) => {
 app.use("/api/services", serviceRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reservations", authenticate, reservationRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 export default app;

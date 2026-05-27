@@ -28,25 +28,38 @@ const editService = async (serviceId, formData) => {
 
 const retrieveAllServices = async () => {
   try {
-    const { data } = await api.get("/api/services");
-    if (data.success) {
-      return { services: data, error: null };
+    const response = await api.get("/api/services");
+    const responseData = response.data;
+    if (responseData && responseData.success) {
+      return { services: responseData.services, error: null };
     }
-  } catch (error) {
-    return { services: null, error: error.response?.data?.message || error.message };
+    return { services: [], error: responseData?.message || "Failed to fetch services" };
+  } catch (err) {
+    return { services: [], error: err.response?.data?.message || err.message };
   }
 };
 
 const retrieveServiceDetails = async (serviceId) => {
   try {
     const { data } = await api.get(`/api/services/${serviceId}`);
-    if (data.success) {
+    if (data && data.success !== false) {
       return { service: data.serviceDetails, error: null };
     }
+    return { service: null, error: data?.message || "Service not found" };
   } catch (error) {
     console.log(error);
     return { service: null, error: error.response?.data?.message || error.message };
   }
 };
 
-export { addService, editService, retrieveAllServices, retrieveServiceDetails };
+const deleteService = async (serviceId) => {
+  try {
+    const { data } = await api.delete(`/api/services/${serviceId}`);
+    if (data.success) return { success: true, error: null };
+    return { success: false, error: data.message };
+  } catch (err) {
+    return { success: false, error: err.response?.data?.message || err.message };
+  }
+};
+
+export { addService, editService, retrieveAllServices, retrieveServiceDetails, deleteService };

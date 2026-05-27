@@ -12,6 +12,10 @@ import Wishlist from "./pages/Wishlist";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
 import AddServiceForm from "./components/AddServiceForm";
+import AdminReservations from "./pages/AdminReservations";
+import AdminServices from "./pages/AdminServices";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLayout from "./pages/AdminLayout";
 import RootLayout from "./pages/RootLayout";
 import AuthLayout from "./pages/AuthLayout";
 
@@ -23,7 +27,6 @@ import {
   Outlet,
   Navigate,
   Link,
-  useNavigate,
 } from "react-router-dom";
 import "./App.css";
 
@@ -62,7 +65,11 @@ const router = createBrowserRouter([
       {
         element: <AdminRoutes />,
         children: [
-          { path: "/admin/services", element: <AddServiceForm /> },
+          { path: "/admin", element: <AdminLayout /> },
+          { path: "/admin/services", element: <AdminLayout /> },
+          { path: "/admin/services/add", element: <AdminLayout /> },
+          { path: "/admin/services/edit/:id", element: <AdminLayout /> },
+          { path: "/admin/reservations", element: <AdminLayout /> },
         ],
       },
     ],

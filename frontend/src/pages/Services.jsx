@@ -4,16 +4,15 @@ import { retrieveAllServices } from "../services/fetchService";
 import { useQuery } from "@tanstack/react-query";
 
 function Services() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["services"],
     queryFn: retrieveAllServices,
   });
 
   if (isLoading) return <div className="loading-page"><div className="spinner" /></div>;
-  if (error) return <div className="error-page">Failed to load services.</div>;
+  if (isError) return <div className="error-page">Failed to load services: {error?.message}</div>;
 
-  const allServices = data?.services?.services || [];
-
+  const allServices = data?.services || [];
   return (
     <div className="page services-page">
       <div className="page-header">

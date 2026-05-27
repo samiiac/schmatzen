@@ -17,7 +17,7 @@ export async function loginUser(userData) {
 
 export async function registerUser(userData) {
   try {
-    const { confirmPassword, ...payload } = userData;
+    const { ...payload } = userData;
     console.log(payload);
     const response = await api.post("api/auth/register", payload);
 

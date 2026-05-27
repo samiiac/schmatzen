@@ -19,21 +19,21 @@ function AddServiceForm({ edit = false }) {
   } = useForm({ mode: "onChange", resolver: zodResolver(serviceSchema) });
 
 
-  const {
-    data: service,
-    isLoading,
-  } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["service", id],
     queryFn: () => retrieveServiceDetails(id),
     enabled: edit && id != null,
     onSuccess: (data) => {
-      reset({
-        name: data.name,
-        basic: data.pricing.basic,
-        premium: data.pricing.premium,
-        details: data.details,
-        availability: data.availability.toString(),
-      });
+      const service = data?.service;
+      if (service) {
+        reset({
+          name: service.name,
+          basic: service.pricing.basic,
+          premium: service.pricing.premium,
+          details: service.details,
+          availability: service.availability.toString(),
+        });
+      }
     },
   });
 

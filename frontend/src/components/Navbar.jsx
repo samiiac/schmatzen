@@ -40,7 +40,7 @@ function Navbar() {
               <>
                 <Link to="/my-reservations" onClick={() => setMobileOpen(false)}>My Bookings</Link>
                 <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Wishlist</Link>
-                {isAdmin && <Link to="/admin/services" onClick={() => setMobileOpen(false)}>Admin</Link>}
+                {isAdmin && <Link to="/admin" onClick={() => setMobileOpen(false)}>Admin</Link>}
                 <span className="nav-user">{user.firstname}</span>
                 <button onClick={handleLogout} className="btn-outline" style={{padding:'5px 14px',borderRadius:'999px',fontSize:'.78rem',border:'1.5px solid rgba(167,139,250,.3)',background:'transparent',color:'#a78bfa',cursor:'pointer'}}>
                   Logout

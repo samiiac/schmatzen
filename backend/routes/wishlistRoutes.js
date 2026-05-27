@@ -1,18 +1,16 @@
 import { Router } from "express";
+import { authenticate } from "../middleware/auth.js";
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+} from "../controllers/wishlistController.js";
 
 const router = Router();
 
-router.get('/',(req,res)=>{
-
-})
-
-router.post('/',(req,res)=>{
-
-})
-
-router.delete('/:id',(req,res)=>{
-
-})
+router.get("/", authenticate, getWishlist);
+router.post("/", authenticate, addToWishlist);
+router.delete("/:id", authenticate, removeFromWishlist);
 
 export default router;
 

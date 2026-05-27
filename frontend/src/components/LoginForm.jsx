@@ -24,7 +24,7 @@ function LoginForm() {
     try {
       const response = await loginUser(data);
       const { user } = response;
-      if (user) { login(user); navigate("/"); }
+      if (user) { login(user); navigate(user.role === "admin" ? "/admin" : "/"); }
       else { setError(response.error); }
     } catch { setError("Something went wrong."); }
   }

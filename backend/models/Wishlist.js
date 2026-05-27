@@ -1,13 +1,23 @@
 import mongoose from "mongoose";
 
+const wishlistSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    services: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "service",
+      },
+    ],
+  },
+  { timestamps: true },
+);
 
-
-const wishlistSchema = new mongoose.Schema({
-   userId,
-   services:[{type:Schema.Types.ObjectId,ref:'serviceModel'}]
-   
-})
-
-const wishlistModel = mongoose.models.wishlists || mongoose.model('wishlist',userSchema);
+const wishlistModel =
+  mongoose.models.wishlist || mongoose.model("wishlist", wishlistSchema);
 
 export default wishlistModel;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { createReservation } from "../services/reservationService";
@@ -21,10 +21,6 @@ function Booking() {
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (service) setServiceType("Basic");
-  }, [service]);
 
   if (!service) return <div className="loading-page"><div className="spinner" /></div>;
 

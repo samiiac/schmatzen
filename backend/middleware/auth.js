@@ -9,7 +9,11 @@ const authenticate = (req, res, next) => {
       throw new Error("No auth headers found.");
     }
 
-    const decodedToken = jwt.verify(authHeaders, process.env.JWT_SECRET_KEY);
+    const token = authHeaders.startsWith("Bearer ")
+      ? authHeaders.split(" ")[1]
+      : authHeaders;
+    
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
    
     req.user = decodedToken;
     next();

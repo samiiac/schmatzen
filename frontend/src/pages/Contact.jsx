@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { UserAuthContext } from "../AuthProvider";
 import { submitContact } from "../services/contactService";
 
 function Contact() {
