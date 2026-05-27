@@ -1,40 +1,82 @@
 import api from "./axios";
 
+const getErrorMessage = (err) => {
+  if (!err.response) {
+    return "Network error. Try again.";
+  }
+
+  const data = err.response.data;
+
+
+  if (data?.message) {
+    console.log(data.message);
+    return data.message;
+  }
+
+  return "Something went wrong.";
+};
+
 export async function loginUser(userData) {
   try {
-    const response = await api.post("api/auth/login", userData);
+    const response = await api.post("/api/auth/login", userData);
 
-    if (response.data.success) {
-      const { token, role, firstname, email } = response.data;
-      return { user: { token, role, firstname, email }, error: null };
+    const { success, token, role, firstname, email, message } = response.data;
+
+    if (!success) {
+      return { user: null, error: message || "Login failed" };
     }
-    return { user: null, error: response.data.message };
+
+    return {
+      user: { token, role, firstname, email },
+      error: null,
+    };
   } catch (err) {
-    console.log("error.response.data", err.response.data);
-    return { user: null, error: err.response.data.message };
+    return {
+      user: null,
+      error: getErrorMessage(err),
+    };
   }
 }
 
 export async function registerUser(userData) {
   try {
     const { confirmPassword, ...payload } = userData;
-    console.log(payload);
-    const response = await api.post("api/auth/register", payload);
 
-    if (response.data.success) {
-      const { token, role, firstname, email } = response.data;
-      return { user: { token, role, firstname, email }, error: null };
+    const response = await api.post("/api/auth/register", payload);
+
+    const { success, token, role, firstname, email, message } =
+      response.data;
+
+    if (!success) {
+      return { user: null, error: message || "Registration failed" };
     }
-    return { user: null, error: response.data.message };
+
+    return {
+      user: { token, role, firstname, email },
+      error: null,
+    };
   } catch (err) {
-    let errMessage = err.response.data;
-    if (errMessage.message.includes("E11000")) {
+    const raw = err?.response?.data?.message || "";
+
+    // Mongo duplicate key error handling (E11000)
+    if (raw.includes("E11000")) {
       return {
         user: null,
-        error: "The account with this phone number already exists",
+        error: "Account already exists.",
       };
     }
-    console.log("Error while registering user ", errMessage);
-    return { user: null, error: errMessage.message };
+
+    // validation errors (optional pattern)
+    if (raw.toLowerCase().includes("validation")) {
+      return {
+        user: null,
+        error: "Invalid input data.",
+      };
+    }
+
+    return {
+      user: null,
+      error: getErrorMessage(err),
+    };
   }
 }

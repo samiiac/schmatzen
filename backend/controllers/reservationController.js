@@ -44,8 +44,7 @@ export const addUserReservations = async (req, res) => {
   }
 };
 
-//update the details of user reservations
-//admin?or user too some fields?
+
 export const updateReservations = async (req, res) => {
   try {
     const id = req.params.id;
@@ -98,6 +97,43 @@ export const updateUserReservations = async (req, res) => {
         message: "Successfully updated.",
         updatedReservation,
       });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const confirmPayment = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // Only allow if still pending
+    if (req.resource.reservationStatus !== "pending") {
+      return res.status(400).json({
+        success: false,
+        message: "Reservation is already confirmed or cannot be updated.",
+      });
+    }
+
+    const updatedReservation = await reservationModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          reservationStatus: "confirmed",
+          paymentStatus: "paid",
+        },
+      },
+      { returnDocument: "after", runValidators: true },
+    );
+
+    if (!updatedReservation) {
+      return res.status(404).json({ success: false, message: "Not found." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Payment confirmed.",
+      reservation: updatedReservation,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

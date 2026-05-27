@@ -17,8 +17,8 @@ function ServiceCard({ service }) {
           <h3 style={{fontSize:'1.05rem',color:'var(--text)',marginBottom:'.5rem'}}>{service.name}</h3>
         </Link>
         <div style={{display:'flex',gap:'.85rem',marginBottom:'.4rem'}}>
-          <span style={{fontSize:'.82rem',color:'var(--muted)'}}>Basic ₹{service.pricing?.basic}</span>
-          <span style={{fontSize:'.82rem',color:'var(--muted)'}}>Premium ₹{service.pricing?.premium}</span>
+          <span style={{fontSize:'.82rem',color:'var(--muted)'}}>Basic NPR{service.pricing?.basic}</span>
+          <span style={{fontSize:'.82rem',color:'var(--muted)'}}>Premium NPR{service.pricing?.premium}</span>
         </div>
         <p style={{
           fontSize:'.72rem',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:'.75rem',

@@ -7,8 +7,8 @@ const serviceSchema = new mongoose.Schema(
       required: true,
     },
     pricing: {
-      basic: {type : Number,required:true},
-      premium: {type: Number,required:true}
+      basic: { type: Number, required: true, min: 0 },
+      premium: { type: Number, required: true, min: 0 },
     },
     details: {
       type: String,

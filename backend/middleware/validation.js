@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 export const validatePayload = function (schema) {
   return (req, res, next) => {
     try {
-     
       const validatedData = schema.parse(req.body);
       console.log(validatedData);
       req.body = validatedData;
@@ -23,7 +22,7 @@ export const validatePayload = function (schema) {
   };
 };
 
-export const validateId = (req, res,next) => {
+export const validateId = (req, res, next) => {
   try {
     const id = req.params.id;
     if (mongoose.isValidObjectId(id)) {

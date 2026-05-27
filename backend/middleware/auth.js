@@ -4,14 +4,17 @@ const authenticate = (req, res, next) => {
   console.log("running middleware");
 
   try {
-    const authHeaders = req.headers.authorization;
+    const authHeaders = req.headers.authorization.split(' ')[1];
+    console.log(authHeaders);
     if (!authHeaders) {
       throw new Error("No auth headers found.");
     }
 
     const decodedToken = jwt.verify(authHeaders, process.env.JWT_SECRET_KEY);
-   
+    console.log(decodedToken);
     req.user = decodedToken;
+    console.log(req.user);
+   
     next();
   } catch (error) {
     res.status(401).json({ success: false, message: error.message });
@@ -20,7 +23,7 @@ const authenticate = (req, res, next) => {
 
 const authorize = function (requiredRole) {
   return (req, res, next) => {
-    console.log(req.user);
+    
     try {
       if (req.user.role !== requiredRole) {
         return res

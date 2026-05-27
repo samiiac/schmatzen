@@ -3,41 +3,42 @@ import bcrypt from "bcrypt";
 import { createToken } from "../utils/createToken.js";
 
 const registerUser = async (req, res) => {
-  const { email, firstname, lastname, phonenumber, password } = req.body;
-
   try {
+    const { email, firstname, lastname, phonenumber, password } = req.body;
+
     const emailExists = await userModel.findOne({ email });
 
     if (emailExists) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Account already exists." });
+      return res.status(409).json({
+        success: false,
+        message: "Account already exists.",
+      });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new userModel({
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await userModel.create({
       email,
       firstname,
       lastname,
       phonenumber,
       password: hashedPassword,
     });
-    const user = await newUser.save();
+
     const token = createToken(user._id, user.email, user.role);
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        token: token,
-        role: user.role,
-        email: user.email,
-        firstname: user.firstname,
-      });
+    return res.status(201).json({
+      success: true,
+      token,
+      role: user.role,
+      email: user.email,
+      firstname: user.firstname,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Registration failed",
+    });
   }
 };
 
@@ -61,18 +62,18 @@ const loginUser = async (req, res) => {
     }
 
     const token = createToken(user._id, user.email, user.role);
-    res
-      .status(200)
-      .json({
-        success: true,
-        token: token,
-        role: user.role,
-        email: user.email,
-        firstname: user.firstname,
-      });
+    return res.status(200).json({
+      success: true,
+      token: token,
+      role: user.role,
+      email: user.email,
+      firstname: user.firstname,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Login failed",
+    });
   }
 };
 
@@ -97,9 +98,9 @@ const registerAdmin = async (req, res) => {
       });
       const user = await newUser.save();
       const token = createToken(user._id, user.email, user.role);
-      res.status(201).json({ success: true, token: token });
+      return res.status(201).json({ success: true, token: token });
     } else {
-      res
+      return res
         .status(401)
         .json({ success: false, message: "Error registering Admin." });
     }
@@ -119,10 +120,10 @@ const getUserProfile = async (req, res) => {
         .json({ success: false, message: "No object found." });
     }
 
-    res.status(200).json({ success: true, user });
+    return res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error getting user profile", error);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 

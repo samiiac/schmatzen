@@ -38,12 +38,12 @@ function SingleService() {
           <div className="pricing-section">
             <div className="price-card">
               <h3 style={{fontSize:'1rem',marginBottom:'.25rem',color:'var(--muted)'}}>Basic Package</h3>
-              <p className="price">₹{service.pricing?.basic}</p>
+              <p className="price">NPR {service.pricing?.basic}</p>
               <ul><li>Digital delivery</li><li>Edited photos</li></ul>
             </div>
             <div className="price-card premium">
               <h3 style={{fontSize:'1rem',marginBottom:'.25rem',color:'var(--muted)'}}>Premium Package</h3>
-              <p className="price">₹{service.pricing?.premium}</p>
+              <p className="price">NPR {service.pricing?.premium}</p>
               <ul><li>Digital + Physical prints</li><li>Edited photos</li></ul>
             </div>
           </div>

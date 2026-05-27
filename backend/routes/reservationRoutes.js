@@ -63,20 +63,25 @@ const updatedReservationSchema = updatedReservationBaseSchema.refine(
   },
 );
 
-router.get("/all", authenticate, authorize("admin"), getAllReservations);
+router.get("/all", authorize("admin"), getAllReservations);
 
-router.get("/:id", authenticate, validateId, getUserReservations);
+router.get("/",  getUserReservations);
 
 router.post(
   "/",
-  authenticate,
   validatePayload(reservationSchema),
   addUserReservations,
 );
 
 router.patch(
+  "/pay/:id",
+  authorizeOwnerShip(reservationModel),
+  validateId,
+  confirmPayment,  
+);
+
+router.patch(
   "/:id",
-  authenticate,
   authorize("admin"),
   validateId,
   validatePayload(updatedReservationAdminSchema),
@@ -85,7 +90,6 @@ router.patch(
 
 router.patch(
   "/user/:id",
-  authenticate,
   authorizeOwnerShip(reservationModel),
   validateId,
   validatePayload(updatedReservationSchema),

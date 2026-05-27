@@ -22,9 +22,9 @@ const createService = async (req, res) => {
     console.log(imagesURL);
     const newService = new serviceModel({
       name,
-      pricing:{
-        basic:pricing.basic,
-        premium:pricing.premium
+      pricing: {
+        basic: pricing.basic,
+        premium: pricing.premium,
       },
       details,
       availability,
@@ -33,12 +33,16 @@ const createService = async (req, res) => {
     console.log(newService);
 
     await newService.save();
-    if(!newService){
-      return res.status(400).json({ success: false, message: "Error creating service." });
+    if (!newService) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Error creating service." });
     }
-    res
-      .status(201)
-      .json({ success: true, message: "Service Added Successfully",service : newService });
+    res.status(201).json({
+      success: true,
+      message: "Service Added Successfully",
+      service: newService,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error });
@@ -48,14 +52,16 @@ const createService = async (req, res) => {
 //retrieve all services
 const getAllServices = async (req, res) => {
   try {
-    const services = await serviceModel.find({},{
-    
-      name:1,
-      pricing:1,
-      availability:1,
-      images:{$slice:1}
-    });
-    res.status(200).json({ success: true, services:services});
+    const services = await serviceModel.find(
+      {},
+      {
+        name: 1,
+        pricing: 1,
+        availability: 1,
+        images: { $slice: 1 },
+      },
+    );
+    res.status(200).json({ success: true, services: services });
   } catch (error) {
     console.log("Error while fetching services", error);
     res.status(500).json({ message: error.message });
@@ -123,3 +129,5 @@ export {
   updateService,
   deleteService,
 };
+
+//use fs for uploads and crypto

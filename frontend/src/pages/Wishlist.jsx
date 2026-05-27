@@ -33,7 +33,7 @@ function Wishlist() {
               <img src={s.images?.[0] || ""} alt={s.name} className="wishlist-img" />
             </Link>
             <Link to={`/services/${s._id}`} className="wishlist-name">{s.name}</Link>
-            <p className="wishlist-price">Basic ₹{s.pricing?.basic} · Premium ₹{s.pricing?.premium}</p>
+            <p className="wishlist-price">Basic NPR {s.pricing?.basic} · Premium NPR {s.pricing?.premium}</p>
             <button onClick={() => handleRemove(s._id)} className="btn btn-danger btn-sm">Remove</button>
           </div>
         ))}
