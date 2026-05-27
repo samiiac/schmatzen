@@ -14,6 +14,7 @@ import {
   authorizeOwnerShip,
 } from "../middleware/auth.js";
 import reservationModel from "../models/Reservation.js";
+import { confirmPayment } from "../controllers/reservationController.js";
 
 const router = Router();
 
@@ -94,6 +95,21 @@ router.patch(
   validateId,
   validatePayload(updatedReservationSchema),
   updateUserReservations,
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorizeOwnerShip(reservationModel),
+  validateId,
+  async (req, res) => {
+    try {
+      await reservationModel.findByIdAndDelete(req.params.id);
+      res.status(200).json({ success: true, message: "Deleted successfully." });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
 );
 
 export default router;

@@ -33,19 +33,10 @@ const createService = async (req, res) => {
     console.log(newService);
 
     await newService.save();
-    if (!newService) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Error creating service." });
-    }
-    res.status(201).json({
-      success: true,
-      message: "Service Added Successfully",
-      service: newService,
-    });
+    res.status(201).json({ success: true, message: "Service Added Successfully", service: newService });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: error });
+    res.status(500).json({ success: false, message: error.message || error });
   }
 };
 
@@ -64,20 +55,16 @@ const getAllServices = async (req, res) => {
     res.status(200).json({ success: true, services: services });
   } catch (error) {
     console.log("Error while fetching services", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-//retrieve a specific service
 const getService = async (req, res) => {
-  console.log(req.params.id);
   try {
     const id = req.params.id;
     const serviceDetails = await serviceModel.findById(id);
     if (!serviceDetails) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Service not found." });
+      return res.status(404).json({ success: false, message: "Service not found." });
     }
     res.status(200).json({ success: true, serviceDetails });
   } catch (error) {
@@ -85,9 +72,7 @@ const getService = async (req, res) => {
   }
 };
 
-//update a specific service
 const updateService = async (req, res) => {
-  //admin
   try {
     const id = req.params.id;
     const updatedData = req.body;
@@ -98,23 +83,20 @@ const updateService = async (req, res) => {
       { returnDocument: "after", runValidators: true },
     );
     if (!updatedService) {
-      return res.status(404).json({ message: "Service not found" });
+      return res.status(404).json({ success: false, message: "Service not found." });
     }
-    res.status(200).json({ message: "Service Updated", updatedService });
+    res.status(200).json({ success: true, message: "Service Updated", updatedService });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-//delete a specific service
 const deleteService = async (req, res) => {
-  console.log(req.params);
   try {
     const id = req.params.id;
-
-    const deleted = await serviceModel.findByIdAndDelete(req.params.id); //params or body?
+    const deleted = await serviceModel.findByIdAndDelete(id);
     if (!deleted) {
-      return res.status(404).json({ message: "Service not found" });
+      return res.status(404).json({ success: false, message: "Service not found" });
     }
     res.status(200).json({ success: true, message: "Successfully deleted" });
   } catch (error) {

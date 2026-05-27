@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 
 function AuthLayout() {

@@ -14,7 +14,7 @@ function SingleService() {
 
   const service = data?.service;
   if (isLoading) return <div className="loading-page"><div className="spinner" /></div>;
-  if (error) return <div className="error-page">Something went wrong.</div>;
+  if (error) return <div className="error-page">Something went wrong: {error?.message}</div>;
   if (!service) return <div className="error-page">Service not found.</div>;
 
   return (

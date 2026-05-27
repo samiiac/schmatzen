@@ -65,6 +65,16 @@ export async function getUserReservations() {
   }
 }
 
+export async function getUserReservationById(id) {
+  try {
+    const { data } = await api.get(`/api/reservations/${id}`);
+    if (data.success) return { reservation: data.reservation, error: null };
+    return { reservation: null, error: data.message };
+  } catch (err) {
+    return { reservation: null, error: err.response?.data?.message || err.message };
+  }
+}
+
 export async function getAllReservations() {
   try {
     const { data } = await api.get("/api/reservations/all");

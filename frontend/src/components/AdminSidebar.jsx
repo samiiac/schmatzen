@@ -1,67 +1,59 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { VscClose } from "react-icons/vsc";
 
-function AdminSidebar({ toggleSidebar }) {
+function AdminSidebar() {
   return (
-    <>
-    
-      <div
-        className="fixed inset-0 bg-black/20 z-40"
-        onClick={toggleSidebar}
-      />
+    <aside className="bg-surface h-screen w-64 border-r fixed top-0 left-0 z-50 shadow-xl p-6 overflow-y-auto">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold">Admin Panel</h2>
+      </div>
 
-     
-      <div className="bg-surface h-screen w-50 border-l fixed top-0 right-0 z-50 shadow-xl p-6">
-        <div className="flex  gap-40 items-end justify-end mb-4  pb-4">
-          
-          <button onClick={toggleSidebar} className="text-xl">
-            <VscClose/>
-          </button>
+      <nav className="space-y-6">
+        <div>
+          <h3 className="text-text uppercase text-sm font-semibold tracking-wider mb-2">
+            Services
+          </h3>
+          <ul className="flex flex-col gap-1 text-base">
+            <li>
+              <Link to="/admin/services" className="hover:text-accent block py-1">
+                Manage Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/services/add" className="hover:text-accent block py-1">
+                Add Service
+              </Link>
+            </li>
+          </ul>
         </div>
 
-        <aside className="space-y-8">
-          <nav>
-            <h3 className="text-text uppercase text-lg font-normal tracking-widest mb-2">
-              Services
-            </h3>
-            <ul className="flex flex-col gap-1 text-base">
-              <li>
-                <Link to="/services" className="hover:text-accent">
-                  View all services
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/services/add" className="hover:text-accent">
-                  Add a service
-                </Link>
-              </li>
-            </ul>
-          </nav>
+        <div>
+          <h3 className="text-text uppercase text-sm font-semibold tracking-wider mb-2">
+            Reservations
+          </h3>
+          <ul className="flex flex-col gap-1 text-base">
+            <li>
+              <Link to="/admin/reservations" className="hover:text-accent block py-1">
+                All Reservations
+              </Link>
+            </li>
+          </ul>
+        </div>
 
-          <nav>
-            <h3 className="text-text uppercase text-lg font-normal tracking-widest mb-2 ">
-              Reservations
-            </h3>
-            <ul className="flex flex-col gap-1 text-base ">
-              <li>
-                <Link to="/admin/reservations" className="hover:text-accent">
-                  View all reservations
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/admin/reservations/edit"
-                  className="hover:text-accent "
-                >
-                  Edit reservation
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-      </div>
-    </>
+        <div>
+          <h3 className="text-text uppercase text-sm font-semibold tracking-wider mb-2">
+            Site
+          </h3>
+          <ul className="flex flex-col gap-1 text-base">
+            <li>
+              <Link to="/" className="hover:text-accent block py-1">
+                View Website
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
   );
 }
 

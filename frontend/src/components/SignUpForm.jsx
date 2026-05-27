@@ -28,7 +28,8 @@ function SignUpForm() {
   async function handleSignUpFormSubmit(data) {
     setError(null);
     try {
-      const { confirmPassword, ...payload } = data;
+      const payload = { ...data };
+      delete payload.confirmPassword;
       const { user, error: err } = await registerUser(payload);
       if (user) { login(user); navigate("/"); }
       else { setError(err); }

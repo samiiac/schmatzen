@@ -11,7 +11,7 @@ function Profile() {
         <div className="profile-avatar">{user?.firstname?.charAt(0).toUpperCase()}</div>
         <h2>{user?.firstname} {user?.lastname}</h2>
         <p><strong>Email:</strong> {user?.email}</p>
-        <p><strong>Role:</strong> {user?.role}</p>
+
         <div className="profile-links">
           <Link to="/my-reservations" className="btn btn-outline">My Bookings</Link>
           <Link to="/wishlist" className="btn btn-outline">Wishlist</Link>
