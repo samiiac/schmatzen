@@ -6,6 +6,7 @@ import {
   updateUserReservations,
   updateReservations,
   getAllReservations,
+  getUserReservationById,
 } from "../controllers/reservationController.js";
 import { validateId, validatePayload } from "../middleware/validation.js";
 import {
@@ -23,7 +24,13 @@ const reservationBaseSchema = z.object({
   serviceType: z.enum(["Basic", "Premium"]),
   scheduledFor: z.coerce.date(),
   shootLocation: z.string().min(5),
-  shippingAddress: z.string().optional(),
+  shippingAddress: z
+    .object({
+      street: z.string().min(1),
+      city: z.string().min(1),
+      country: z.string().min(1),
+    })
+    .optional(),
   notes: z.string().optional(),
 });
 
@@ -49,7 +56,13 @@ const updatedReservationBaseSchema = z.object({
   serviceType: z.enum(["Basic", "Premium"]).optional(),
   scheduledFor: z.coerce.date().optional(),
   shootLocation: z.string().min(5).optional(),
-  shippingAddress: z.string().optional(),
+  shippingAddress: z
+    .object({
+      street: z.string().min(1),
+      city: z.string().min(1),
+      country: z.string().min(1),
+    })
+    .optional(),
   notes: z.string().optional(),
 });
 
@@ -66,19 +79,22 @@ const updatedReservationSchema = updatedReservationBaseSchema.refine(
 
 router.get("/all", authorize("admin"), getAllReservations);
 
-router.get("/",  getUserReservations);
+router.get("/user", getUserReservations);
 
-router.post(
-  "/",
-  validatePayload(reservationSchema),
-  addUserReservations,
-);
+router.post("/", validatePayload(reservationSchema), addUserReservations);
 
 router.patch(
   "/pay/:id",
   authorizeOwnerShip(reservationModel),
   validateId,
-  confirmPayment,  
+  confirmPayment,
+);
+
+router.get(
+  "/user/:id",
+  authorizeOwnerShip(reservationModel),
+  validateId,
+  getUserReservationById,
 );
 
 router.patch(

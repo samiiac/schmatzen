@@ -8,7 +8,7 @@ import { AuthProvider } from "./AuthProvider.jsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // Trust data for 5 minutes
+      staleTime: 1000 * 60 * 1, // Trust data for 1 minutes
       refetchOnWindowFocus: false, // Stop refetching when clicking the tab
     },
   },

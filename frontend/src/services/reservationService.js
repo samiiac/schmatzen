@@ -54,8 +54,9 @@ export async function createReservation(data) {
 export async function getUserReservations() {
   try {
     const { data } = await api.get("/api/reservations/user");
+    
     if (data.success)
-      return { reservations: data.userReservations, error: null };
+      return { reservations: data.reservations, error: null };
     return { reservations: null, error: data.message };
   } catch (err) {
     return {
@@ -67,11 +68,14 @@ export async function getUserReservations() {
 
 export async function getUserReservationById(id) {
   try {
-    const { data } = await api.get(`/api/reservations/${id}`);
+    const { data } = await api.get(`/api/reservations/user/${id}`);
     if (data.success) return { reservation: data.reservation, error: null };
     return { reservation: null, error: data.message };
   } catch (err) {
-    return { reservation: null, error: err.response?.data?.message || err.message };
+    return {
+      reservation: null,
+      error: err.response?.data?.message || err.message,
+    };
   }
 }
 
@@ -103,12 +107,16 @@ export async function updateReservation(id, data) {
 }
 
 export const confirmReservationPayment = async (reservationId) => {
-  const res = await fetch(`/api/reservations/pay/${reservationId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-  });
-  return res.json();
+  try {
+    const { data } = await api.patch(`/api/reservations/pay/${reservationId}`);
+    console.log(data);
+    return data;
+  } catch (err) {
+    return {
+      success: false,
+      message: err?.response?.data?.message || "Payment failed",
+    };
+  }
 };
 
 export async function updateUserReservation(id, data) {

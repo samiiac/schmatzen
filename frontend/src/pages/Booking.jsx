@@ -111,12 +111,8 @@ function Booking() {
 
   return (
     <div className="page booking-page max-w-[1140px] mx-auto px-6 py-8 font-sans">
-      <button
-        onClick={() => navigate(-1)}
-        className="bg-none border-none text-[#a78bfa] cursor-pointer text-[1.05rem] pb-4 transition-colors hover:text-[#e879f9]"
-      >
-        ← Back
-      </button>
+   
+     
 
       <h1 className="page-title font-['Playfair_Display',serif] text-4xl text-[#f3e8ff] mb-2">
         Book Your Session

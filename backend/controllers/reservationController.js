@@ -44,7 +44,6 @@ export const addUserReservations = async (req, res) => {
   }
 };
 
-
 export const updateReservations = async (req, res) => {
   try {
     const id = req.params.id;
@@ -57,7 +56,11 @@ export const updateReservations = async (req, res) => {
     if (!updatedReservation) {
       return res.status(404).json({ success: false, message: "Not found." });
     }
-    res.status(200).json({ success: true, message: "Successfully updated." ,updatedReservation});
+    res.status(200).json({
+      success: true,
+      message: "Successfully updated.",
+      updatedReservation,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -90,13 +93,11 @@ export const updateUserReservations = async (req, res) => {
     if (!updatedReservation) {
       return res.status(404).json({ success: false, message: "Not found." });
     }
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Successfully updated.",
-        updatedReservation,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Successfully updated.",
+      updatedReservation,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -106,12 +107,10 @@ export const confirmPayment = async (req, res) => {
   try {
     const id = req.params.id;
 
-    // Only allow if still pending
-    if (req.resource.reservationStatus !== "pending") {
-      return res.status(400).json({
-        success: false,
-        message: "Reservation is already confirmed or cannot be updated.",
-      });
+    if (!["pending", "confirmed"].includes(req.resource.reservationStatus)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Cannot be performed." });
     }
 
     const updatedReservation = await reservationModel.findByIdAndUpdate(
@@ -142,11 +141,28 @@ export const confirmPayment = async (req, res) => {
 export const getUserReservations = async (req, res) => {
   try {
     const userId = req.user.id;
-    const userReservations = await reservationModel.find({ user: userId });
-    if (!userReservations) {
+    const reservations = await reservationModel
+      .find({ user: userId })
+      .populate("service", "name pricing images"); 
+
+    res.status(200).json({ success: true, reservations });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserReservationById = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const reservation = await reservationModel
+      .findOne({ _id: req.params.id, user: userId }) // ensures ownership
+      .populate("service", "name pricing");
+
+    if (!reservation) {
       return res.status(404).json({ success: false, message: "Not found." });
     }
-    res.status(200).json({ success: true, userReservations });
+
+    res.status(200).json({ success: true, reservation });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

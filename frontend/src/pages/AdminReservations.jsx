@@ -1,5 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllReservations, updateReservation } from "../services/reservationService";
+import {
+  getAllReservations,
+  updateReservation,
+} from "../services/reservationService";
 import { useState } from "react";
 
 function AdminReservations() {
@@ -26,8 +29,18 @@ function AdminReservations() {
     queryClient.invalidateQueries(["admin-reservations"]);
   };
 
-  if (isLoading) return <div className="loading-page"><div className="spinner" /></div>;
-  if (error) return <div className="error-page">{error?.message || "Failed to load reservations"}</div>;
+  if (isLoading)
+    return (
+      <div className="loading-page">
+        <div className="spinner" />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="error-page">
+        {error?.message || "Failed to load reservations"}
+      </div>
+    );
 
   const reservations = data?.reservations || [];
 
@@ -66,7 +79,12 @@ function AdminReservations() {
                     {editingId === r._id ? (
                       <select
                         value={editData.reservationStatus}
-                        onChange={(e) => setEditData({ ...editData, reservationStatus: e.target.value })}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            reservationStatus: e.target.value,
+                          })
+                        }
                       >
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
@@ -81,7 +99,12 @@ function AdminReservations() {
                     {editingId === r._id ? (
                       <select
                         value={editData.paymentStatus}
-                        onChange={(e) => setEditData({ ...editData, paymentStatus: e.target.value })}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            paymentStatus: e.target.value,
+                          })
+                        }
                       >
                         <option value="pending">Pending</option>
                         <option value="paid">Paid</option>
@@ -91,15 +114,30 @@ function AdminReservations() {
                       r.paymentStatus
                     )}
                   </td>
-                  <td>₹{r.totalAmount}</td>
+                  <td>NPR {r.totalAmount}</td>
                   <td>
                     {editingId === r._id ? (
                       <>
-                        <button onClick={() => handleSave(r._id)} className="btn btn-primary btn-sm">Save</button>
-                        <button onClick={() => setEditingId(null)} className="btn btn-outline btn-sm">Cancel</button>
+                        <button
+                          onClick={() => handleSave(r._id)}
+                          className="btn btn-primary btn-sm"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className="btn btn-outline btn-sm"
+                        >
+                          Cancel
+                        </button>
                       </>
                     ) : (
-                      <button onClick={() => handleEditClick(r)} className="btn btn-outline btn-sm">Edit</button>
+                      <button
+                        onClick={() => handleEditClick(r)}
+                        className="btn btn-outline btn-sm"
+                      >
+                        Edit
+                      </button>
                     )}
                   </td>
                 </tr>

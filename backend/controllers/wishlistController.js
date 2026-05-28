@@ -8,10 +8,10 @@ import serviceModel from "../models/Service.js";
 export const addToWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { service } = req.body;
+    const { serviceId } = req.body;
 
     const user = await userModel.findById(userId);
-    const serviceExists = await serviceModel.findById(service);
+    const serviceExists = await serviceModel.findById(serviceId);
 
     if (!user || !serviceExists) {
       return res
@@ -21,7 +21,7 @@ export const addToWishlist = async (req, res) => {
 
     const existing = await wishlistModel.findOne({
       user: userId,
-      service,
+      service: serviceId,
     });
 
     if (existing) {
@@ -32,7 +32,7 @@ export const addToWishlist = async (req, res) => {
 
     const newWishlistItem = new wishlistModel({
       user: userId,
-      service,
+      service: serviceId,
     });
 
     await newWishlistItem.save();
@@ -69,20 +69,11 @@ export const getUserWishlist = async (req, res) => {
  */
 export const removeFromWishlist = async (req, res) => {
   try {
-    const id = req.params.id;
-
-    const deleted = await wishlistModel.findByIdAndDelete(id);
-    
+    const deleted = await wishlistModel.findByIdAndDelete(req.params.id);
     if (!deleted) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Not found." });
+      return res.status(404).json({ success: false, message: "Not found." });
     }
-
-    res.status(200).json({
-      success: true,
-      message: "Removed from wishlist.",
-    });
+    res.status(200).json({ success: true, message: "Removed from wishlist." });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

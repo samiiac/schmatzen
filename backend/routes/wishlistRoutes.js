@@ -13,7 +13,7 @@ import wishlistModel from "../models/Wishlist.js";
 const router = Router();
 
 const wishlistSchema = z.object({
-  service: z.string(),
+  serviceId: z.string(),
 });
 
 router.get("/", authenticate, getUserWishlist);
